@@ -1,0 +1,19 @@
+
+import random
+randomnum = random.randint(0, 9)
+
+print ("I will pick a number between 0 and 9. Guess my number")
+keepplaying = True
+count = 0
+
+while keepplaying == True:
+    count += 1
+    choice = input("Guess a number: ")
+
+    if int(choice) > randomnum:
+        print("I am sorry, your guess was too high.")
+    elif int(choice)  < randomnum:
+        print("I am sorry, your guess was too low.")
+    elif int(choice) == randomnum:
+        print ('You picked my number! It only took', count, 'tries. Great job.')
+        keepplaying = False
