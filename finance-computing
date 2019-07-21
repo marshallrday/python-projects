@@ -1,0 +1,88 @@
+import math
+
+class Account:
+    def __init__(self, id = 0, balance = 100, annualInterestRate = 0):
+        self.__id = int(id)
+        self.__balance = float(balance)
+        self.__annualInterestRate = float(annualInterestRate)
+
+    def get_id(self):
+        return self.__id
+
+    def set_id(self):
+        self.__id = id
+
+    def get_balance(self):
+        return self.__balance
+
+    def set_balance(self):
+        self.__balance = balance
+
+    def get_annualInterestRate(self):
+        return self.__annualInterestRate
+
+    def values(self):
+        id = input(int("what is the account ID? "))
+        print("the id is ", id)
+        balance = input(float("what is the balance? "))
+        print("the balance is ", balance)
+        annualInterestRate = input(float("what is the annual interest rate? "))
+        print("the annualInterestRate is ", annualInterestRate)
+
+    def set_interest(self):
+        self.__annualInterestRate = annualInterestRate
+
+    def monthlyInterestRate(self):
+        monthlyInterestRate = (self.__annualInterestRate / 100) / 12
+        monthlyInterest = (monthlyInterestRate * balance)
+        print("Your monthly interest rate is ", monthlyInterestRate)
+        print("Your monthly interest is ", monthlyInterest)
+
+    def withdraw(self):
+        withdrawamt = input(float("how much should be withdrawn? "))
+        newbalance = balance - withdrawamt
+        print("the new balance is ", newbalance)
+
+    def deposit(self):
+        depositamt = input(float("how much should be deposited? "))
+        newerbalance = balance + depositamt
+        print("the new balance after the deposit is ", newerbalance)
+
+
+def main():
+    process = Account()
+    process.monthlyInterestRate()
+    process.withdraw()
+    process.deposit()
+
+    done = False
+
+    while not done:
+        print("Access your account here")
+        print("1) Display ID")
+        print("2) Display balance")
+        print("3) Display annual interest rate")
+        print("4) Display Monthly Interest Rate")
+        print("5) Display Monthly Interest")
+        print("6) Withdraw money")
+        print("7) Deposit Money")
+        print("8) Exit")
+
+        menu = eval(input("what do you want to see?"))
+
+
+        if menu == 1 or 2 or 3:
+            process.values()
+        elif menu == 4 or 5:
+            process.monthlyInterestRate()
+        elif menu == 6:
+            process.withdraw()
+        elif menu == 7:
+            process.deposit()
+        else:
+            break
+
+
+
+main()
+
