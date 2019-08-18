@@ -1,0 +1,82 @@
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_style('whitegrid')
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+data = pd.read_csv('911.csv')
+
+data.info()
+
+data.head()
+#top zip codes and top tonwships
+data['zip'].value_counts().head()
+data['twp'].value_counts().head()
+#gives unique title codes
+data['title'].nunique()
+
+#create a new column called Reason to include the EMS Traffic and Fire reasons
+data['Reason'] = data['title'].apply(lambda title: title.split(':')[0])
+
+data['Reason'].value_counts()
+#chart the data by the Reason
+sns.countplot(x = 'Reason', data = data, palette = 'viridis')
+
+type(data['timeStamp'].iloc[0])
+#converts the timeStamp column from strings to DateTime object
+data['timeStamp'] = pd.to_datetime(data['timeStamp'])
+
+data['Hour'] = data['timeStamp'].apply(lambda time: time.hour)
+data['Month'] = data['timeStamp'].apply(lambda time: time.month)
+data['Day of Week'] = data['timeStamp'].apply(lambda time: time.dayofweek)
+
+dmap = {0:'Mon',1:'Tue',2:'Wed',3:'Thu',4:'Fri',5:'Sat',6:'Sun'}
+
+data['Day of Week'] = data['Day of Week'].map(dmap)
+#use seaborn to plot the data by the 'Reason' over the day of the week
+sns.countplot(x = 'Day of Week', data = data, hue = 'Reason')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
+
+sns.countplot(x='Month', data = data, hue = 'Reason')
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
+#group the data by the month
+byMonth = data.groupby('Month').count()
+byMonth
+
+byMonth['addr'].plot()
+#graphing data by the month
+sns.lmplot(x='Month',y='addr',data=byMonth.reset_index())
+
+data['Date'] = data['timeStamp'].apply(lambda t: t.date())
+
+byDate = data.groupby('Date').count()['twp'].plot()
+plt.tight_layout()
+
+data[data['Reason'] == 'Traffic'].groupby('Date').count()['addr'].plot()
+plt.title('Traffic')
+plt.tight_layout()
+
+data[data['Reason'] == 'Fire'].groupby('Date').count()['twp'].plot()
+plt.title('Fire')
+
+data[data['Reason'] == 'EMS'].groupby('Date').count()['twp'].plot()
+plt.title('EMS')
+
+dayHour = data.groupby(by=['Day of Week','Hour']).count()['Reason'].unstack()
+dayHour.head()
+
+plt.figure(figsize=(12,6))
+sns.heatmap(dayHour,cmap='viridis')
+
+sns.clustermap(dayHour,cmap='viridis')
+
+month = data.groupby(by=['Day of Week','Month']).count()['Reason'].unstack()
+month.head()
+
+plt.figure(figsize=(12,6))
+sns.heatmap(month,cmap='viridis')
+
+sns.clustermap(month,cmap='viridis')
